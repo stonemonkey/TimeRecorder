@@ -1,0 +1,76 @@
+﻿<Window x:Class="TimeRecorder.Main.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:local="clr-namespace:TimeRecorder" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        ResizeMode="CanMinimize" Background="Black" Width="740" Height="530">
+    <Grid Margin="12">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+                        
+        <StackPanel Margin="6">
+            <TextBlock Text="Current time: " Foreground="Lime"/>
+            <TextBlock x:Name="CurrentTime" Foreground="Lime"
+                TextAlignment="Center" FontSize="128"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="6">
+            <TextBlock Text="Runners number: " Foreground="Lime"/>
+            <local:TextBoxEx x:Name="CurrentNumber" Foreground="Lime" Background="Black"
+                FontSize="128" TextAlignment="Center"
+                SelectAllOnFocus="True"/>
+        </StackPanel>
+        
+        <Button x:Name="RecordTime" Content="Record" Foreground="Black" Background="Lime"
+            Grid.Row="2" Margin="6"
+            FontSize="32" IsDefault="True"/>
+
+        <StackPanel Grid.Column="1" Grid.RowSpan="2" Margin="6">
+            <DockPanel>
+                <TextBlock Text="Number: " Foreground="Lime" Background="Black" HorizontalAlignment="Left"/>
+                <local:TextBoxEx x:Name="SearchNumber" TextAlignment="Center" Margin="6,0,0,0" MinWidth="60" HorizontalAlignment="Right" Background="Lime"/>
+                <Button x:Name="Search" Content="Search" MinWidth="85" HorizontalAlignment="Right" Background="Lime"/>
+            </DockPanel>
+            <DataGrid ItemsSource="{Binding TimeRecords.View}" SelectedItem="{Binding SelectedTimeRecord, Mode=TwoWay}"
+                Height="355" Width="205" AlternatingRowBackground="Lime"
+                VerticalScrollBarVisibility="Visible"
+                HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#FF0000"/>
+                </DataGrid.Resources>
+                <i:Interaction.Behaviors>
+                    <local:ScrollIntoViewBehavior/>
+                </i:Interaction.Behaviors>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="No." Binding="{Binding Id}"/>
+                    <DataGridTextColumn Header="Time" Binding="{Binding Time}" SortDirection="Descending"/>
+                    <DataGridTextColumn Header="Number" Binding="{Binding Number}"/>
+                    <DataGridTemplateColumn Header="Wrong">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsPossiblyWrong, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <DockPanel>
+                <TextBlock Text="Start time: " HorizontalAlignment="Left" Foreground="Lime"/>
+                <xctk:DateTimeUpDown Value="{Binding StartTime, Mode=TwoWay}" Format="LongTime" HorizontalAlignment="Right" Background="Lime"/>
+            </DockPanel>
+        </StackPanel>
+
+        <Button x:Name="Save" Content="Save" Background="Lime"
+            Grid.Column="1" Grid.Row="2" Margin="6"
+            FontSize="32"/>
+    </Grid>
+</Window>
